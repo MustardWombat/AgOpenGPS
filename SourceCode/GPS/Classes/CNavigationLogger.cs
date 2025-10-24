@@ -23,6 +23,27 @@ namespace AgOpenGPS
         private DateTime lastSaveTime;
         private readonly TimeSpan autoSaveInterval = TimeSpan.FromSeconds(5);
 
+        // Add static instance for global access
+        private static CNavigationLogger _instance;
+        public static CNavigationLogger Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = new CNavigationLogger();
+                return _instance;
+            }
+        }
+
+        // Add method to check if logging should occur (to avoid excessive logging)
+        private DateTime lastLogTime = DateTime.MinValue;
+        private readonly TimeSpan logInterval = TimeSpan.FromSeconds(1); // Log every second
+
+        public bool ShouldLog()
+        {
+            return DateTime.Now - lastLogTime > logInterval;
+        }
+
         public CNavigationLogger()
         {
             navigationHistory = new List<NavigationData>();
@@ -31,11 +52,50 @@ namespace AgOpenGPS
             string appDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             logFilePath = Path.Combine(appDirectory, "NavigationLog.txt");
             
+            // Ensure directory exists
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(logFilePath));
+                
+                // Create initial file with header
+                CreateInitialLogFile();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating navigation log directory: {ex.Message}");
+            }
+            
             lastSaveTime = DateTime.Now;
+        }
+
+        private void CreateInitialLogFile()
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(logFilePath, false))
+                {
+                    writer.WriteLine("AgOpenGPS Navigation Log");
+                    writer.WriteLine("========================");
+                    writer.WriteLine($"Log Started: {DateTime.Now}");
+                    writer.WriteLine($"Log File Path: {logFilePath}");
+                    writer.WriteLine();
+                    writer.WriteLine("Timestamp\t\tXTE\tLateral Offset\tHeading\tSpeed\tLatitude\tLongitude");
+                    writer.WriteLine("------------------------------------------------------------------------");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating initial navigation log file: {ex.Message}");
+            }
         }
 
         public void LogNavigationData(double xte, double lateralOffset, double heading, double speed, double lat, double lon)
         {
+            // Keep the 1-second timing but log whenever XTE is available
+            if (!ShouldLog()) return;
+
+            lastLogTime = DateTime.Now;
+
             var data = new NavigationData
             {
                 Timestamp = DateTime.Now,
@@ -49,7 +109,7 @@ namespace AgOpenGPS
 
             navigationHistory.Add(data);
             
-            // Auto-save every 10 seconds
+            // Auto-save every 5 seconds
             if (DateTime.Now - lastSaveTime > autoSaveInterval)
             {
                 SaveToFile();
@@ -68,6 +128,8 @@ namespace AgOpenGPS
                     writer.WriteLine("AgOpenGPS Navigation Log");
                     writer.WriteLine("========================");
                     writer.WriteLine($"Generated: {DateTime.Now}");
+                    writer.WriteLine($"Log File Path: {logFilePath}");
+                    writer.WriteLine($"Total Records: {navigationHistory.Count}");
                     writer.WriteLine();
                     writer.WriteLine("Timestamp\t\tXTE\tLateral Offset\tHeading\tSpeed\tLatitude\tLongitude");
                     writer.WriteLine("------------------------------------------------------------------------");
@@ -80,7 +142,6 @@ namespace AgOpenGPS
             }
             catch (Exception ex)
             {
-                // Handle file write errors silently for now
                 Console.WriteLine($"Error saving navigation log: {ex.Message}");
             }
         }

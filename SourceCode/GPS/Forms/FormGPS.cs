@@ -397,6 +397,9 @@ namespace AgOpenGPS
             displayBrightness = new CWindowsSettingsBrightnessController(Properties.Settings.Default.setDisplay_isBrightnessOn);
 
             isobus = new CISOBUS(this);
+
+            // Initialize navigation logger to create log file at startup
+            var logger = CNavigationLogger.Instance;
         }
 
         private void FormGPS_Load(object sender, EventArgs e)
@@ -540,6 +543,12 @@ namespace AgOpenGPS
             }
             //Init AgShareClient
             agShareClient = new AgShareClient(Settings.Default.AgShareServer, Settings.Default.AgShareApiKey);
+            
+            // Initialize XTE logging timer
+            Timer xteTimer = new Timer();
+            xteTimer.Interval = 1000; // 1 second
+            xteTimer.Tick += (s, args) => LogXTEData();
+            xteTimer.Start();
         }
 
         #region Shutdown Handling
@@ -1289,6 +1298,29 @@ namespace AgOpenGPS
         {
             var form = new FormYes(s1);
             form.ShowDialog(this);
+        }
+
+        // Add this method to log XTE data using existing variables
+        private void LogXTEData()
+        {
+            // Use existing XTE data that's already calculated for display
+            if (isJobStarted && guidanceLineDistanceOff != 32000)
+            {
+                double xte = guidanceLineDistanceOff / 1000.0; // Convert from mm to meters
+                CNavigationLogger.Instance.LogNavigationData(
+                    xte,                    // XTE from existing variable
+                    0,                      // Lateral offset (can add if needed)
+                    fixHeading * 180.0 / Math.PI,  // Heading in degrees
+                    avgSpeed,               // Speed
+                    0,                      // Latitude placeholder
+                    0                       // Longitude placeholder
+                );
+            }
+            // Add debugging to see if this method is being called
+            else
+            {
+                Console.WriteLine($"LogXTE: JobStarted={isJobStarted}, GuidanceDistance={guidanceLineDistanceOff}");
+            }
         }
     }//class FormGPS
 }//namespace AgOpenGPS
