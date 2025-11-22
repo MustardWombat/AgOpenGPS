@@ -1386,6 +1386,28 @@ namespace AgOpenGPS
                 );
             }
         }
+
+        // Add method to open Navigation Logger window
+        private void OpenNavigationLogger()
+        {
+            Form form = Application.OpenForms["FormNavigationLogger"];
+
+            if (form != null)
+            {
+                form.Focus();
+                return;
+            }
+
+            form = new FormNavigationLogger();
+            form.Name = "FormNavigationLogger";
+            form.Show(this);
+        }
+
+        // Add button click handler
+        private void btnNavLogger_Click(object sender, EventArgs e)
+        {
+            OpenNavigationLogger();
+        }
     }//class FormGPS
 }//namespace AgOpenGPS
 

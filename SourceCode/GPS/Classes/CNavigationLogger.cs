@@ -35,10 +35,14 @@ namespace AgOpenGPS
         // Add method to check if logging should occur (to avoid excessive logging)
         private DateTime lastLogTime = DateTime.MinValue;
         private readonly TimeSpan logInterval = TimeSpan.FromSeconds(1); // Log every second
+        private bool isRecording = true; // Start recording by default
+
+        public bool IsRecording => isRecording;
+        public string LogFilePath => logFilePath;
 
         public bool ShouldLog()
         {
-            return DateTime.Now - lastLogTime > logInterval;
+            return isRecording && DateTime.Now - lastLogTime > logInterval;
         }
 
         public CNavigationLogger()
@@ -112,6 +116,21 @@ namespace AgOpenGPS
         }
 
         public List<NavigationData> GetNavigationHistory() => navigationHistory;
+
+        public void StartRecording()
+        {
+            isRecording = true;
+        }
+
+        public void StopRecording()
+        {
+            isRecording = false;
+        }
+
+        public void ClearHistory()
+        {
+            navigationHistory.Clear();
+        }
 
         public void SaveToFile()
         {

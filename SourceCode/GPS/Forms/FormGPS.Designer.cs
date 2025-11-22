@@ -140,6 +140,7 @@ namespace AgOpenGPS
             this.toolStripColors = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSectionColors = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripHotkeys = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripNavLogger = new System.Windows.Forms.ToolStripMenuItem();
             this.btnNavigationSettings = new System.Windows.Forms.Button();
             this.btnAutoSteerConfig = new System.Windows.Forms.Button();
             this.btnStartAgIO = new System.Windows.Forms.Button();
@@ -1695,7 +1696,8 @@ namespace AgOpenGPS
             this.toolStripGPSData,
             this.toolStripColors,
             this.toolStripSectionColors,
-            this.toolStripHotkeys});
+            this.toolStripHotkeys,
+            this.toolStripNavLogger});
             this.toolStripDropDownButton1.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripDropDownButton1.Image = global::AgOpenGPS.Properties.Resources.Settings48;
             this.toolStripDropDownButton1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
@@ -1769,6 +1771,14 @@ namespace AgOpenGPS
             this.toolStripHotkeys.Size = new System.Drawing.Size(419, 44);
             this.toolStripHotkeys.Text = "HotKeys";
             this.toolStripHotkeys.Click += new System.EventHandler(this.hotKeysToolStripMenuItem_Click);
+            // 
+            // toolStripNavLogger
+            // 
+            this.toolStripNavLogger.Image = global::AgOpenGPS.Properties.Resources.FileOpen;
+            this.toolStripNavLogger.Name = "toolStripNavLogger";
+            this.toolStripNavLogger.Size = new System.Drawing.Size(419, 44);
+            this.toolStripNavLogger.Text = "Navigation Logger";
+            this.toolStripNavLogger.Click += new System.EventHandler(this.btnNavLogger_Click);
             // 
             // btnNavigationSettings
             // 
@@ -3130,6 +3140,7 @@ namespace AgOpenGPS
         private System.Windows.Forms.ToolStripMenuItem newProfileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadProfileToolStripMenuItem;
         public System.Windows.Forms.Button btnIsobusSectionControl;
+        private System.Windows.Forms.ToolStripMenuItem toolStripNavLogger;
     }
 }
 
