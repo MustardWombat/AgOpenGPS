@@ -36,11 +36,18 @@ namespace AgOpenGPS
             this.btnSave = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
+            this.grpRecordingMode = new System.Windows.Forms.GroupBox();
+            this.rbByTime = new System.Windows.Forms.RadioButton();
+            this.rbByDistance = new System.Windows.Forms.RadioButton();
             this.lblRecordingInterval = new System.Windows.Forms.Label();
             this.nudRecordingInterval = new System.Windows.Forms.NumericUpDown();
             this.lblRecordsPerSecond = new System.Windows.Forms.Label();
+            this.lblDistanceInterval = new System.Windows.Forms.Label();
+            this.nudDistanceInterval = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHistory)).BeginInit();
+            this.grpRecordingMode.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudRecordingInterval)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDistanceInterval)).BeginInit();
             this.SuspendLayout();
             // 
             // lblRecordCount
@@ -154,33 +161,91 @@ namespace AgOpenGPS
             this.btnClose.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnClose.UseVisualStyleBackColor = false;
             // 
+            // grpRecordingMode
+            // 
+            this.grpRecordingMode.Controls.Add(this.rbByTime);
+            this.grpRecordingMode.Controls.Add(this.rbByDistance);
+            this.grpRecordingMode.Controls.Add(this.lblRecordingInterval);
+            this.grpRecordingMode.Controls.Add(this.nudRecordingInterval);
+            this.grpRecordingMode.Controls.Add(this.lblRecordsPerSecond);
+            this.grpRecordingMode.Controls.Add(this.lblDistanceInterval);
+            this.grpRecordingMode.Controls.Add(this.nudDistanceInterval);
+            this.grpRecordingMode.Location = new System.Drawing.Point(400, 10);
+            this.grpRecordingMode.Name = "grpRecordingMode";
+            this.grpRecordingMode.Size = new System.Drawing.Size(350, 100);
+            this.grpRecordingMode.TabIndex = 8;
+            this.grpRecordingMode.TabStop = false;
+            this.grpRecordingMode.Text = "Recording Mode";
+            // 
+            // rbByTime
+            // 
+            this.rbByTime.AutoSize = true;
+            this.rbByTime.Location = new System.Drawing.Point(10, 20);
+            this.rbByTime.Name = "rbByTime";
+            this.rbByTime.Size = new System.Drawing.Size(70, 17);
+            this.rbByTime.TabIndex = 0;
+            this.rbByTime.Text = "By Time";
+            this.rbByTime.UseVisualStyleBackColor = true;
+            this.rbByTime.CheckedChanged += new System.EventHandler(this.rbByTime_CheckedChanged);
+            // 
+            // rbByDistance
+            // 
+            this.rbByDistance.AutoSize = true;
+            this.rbByDistance.Location = new System.Drawing.Point(10, 65);
+            this.rbByDistance.Name = "rbByDistance";
+            this.rbByDistance.Size = new System.Drawing.Size(90, 17);
+            this.rbByDistance.TabIndex = 1;
+            this.rbByDistance.Text = "By Distance";
+            this.rbByDistance.UseVisualStyleBackColor = true;
+            this.rbByDistance.CheckedChanged += new System.EventHandler(this.rbByDistance_CheckedChanged);
+            // 
             // lblRecordingInterval
             // 
             this.lblRecordingInterval.AutoSize = true;
-            this.lblRecordingInterval.Location = new System.Drawing.Point(400, 20);
+            this.lblRecordingInterval.Location = new System.Drawing.Point(30, 43);
             this.lblRecordingInterval.Name = "lblRecordingInterval";
-            this.lblRecordingInterval.Size = new System.Drawing.Size(150, 13);
-            this.lblRecordingInterval.Text = "Recording Interval (seconds):";
+            this.lblRecordingInterval.Size = new System.Drawing.Size(51, 13);
+            this.lblRecordingInterval.Text = "Interval (s):";
             // 
             // nudRecordingInterval
             // 
             this.nudRecordingInterval.DecimalPlaces = 1;
             this.nudRecordingInterval.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            this.nudRecordingInterval.Location = new System.Drawing.Point(560, 18);
+            this.nudRecordingInterval.Location = new System.Drawing.Point(90, 41);
             this.nudRecordingInterval.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
             this.nudRecordingInterval.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
             this.nudRecordingInterval.Name = "nudRecordingInterval";
-            this.nudRecordingInterval.Size = new System.Drawing.Size(60, 20);
+            this.nudRecordingInterval.Size = new System.Drawing.Size(70, 20);
             this.nudRecordingInterval.Value = new decimal(new int[] { 10, 0, 0, 65536 });
             this.nudRecordingInterval.ValueChanged += new System.EventHandler(this.nudRecordingInterval_ValueChanged);
             // 
             // lblRecordsPerSecond
             // 
             this.lblRecordsPerSecond.AutoSize = true;
-            this.lblRecordsPerSecond.Location = new System.Drawing.Point(626, 20);
+            this.lblRecordsPerSecond.Location = new System.Drawing.Point(166, 43);
             this.lblRecordsPerSecond.Name = "lblRecordsPerSecond";
             this.lblRecordsPerSecond.Size = new System.Drawing.Size(100, 13);
             this.lblRecordsPerSecond.Text = "(1.0 records/sec)";
+            // 
+            // lblDistanceInterval
+            // 
+            this.lblDistanceInterval.AutoSize = true;
+            this.lblDistanceInterval.Location = new System.Drawing.Point(30, 88);
+            this.lblDistanceInterval.Name = "lblDistanceInterval";
+            this.lblDistanceInterval.Size = new System.Drawing.Size(54, 13);
+            this.lblDistanceInterval.Text = "Interval (m):";
+            // 
+            // nudDistanceInterval
+            // 
+            this.nudDistanceInterval.DecimalPlaces = 1;
+            this.nudDistanceInterval.Increment = new decimal(new int[] { 5, 0, 0, 65536 });
+            this.nudDistanceInterval.Location = new System.Drawing.Point(90, 86);
+            this.nudDistanceInterval.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
+            this.nudDistanceInterval.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
+            this.nudDistanceInterval.Name = "nudDistanceInterval";
+            this.nudDistanceInterval.Size = new System.Drawing.Size(70, 20);
+            this.nudDistanceInterval.Value = new decimal(new int[] { 10, 0, 0, 65536 });
+            this.nudDistanceInterval.ValueChanged += new System.EventHandler(this.nudDistanceInterval_ValueChanged);
             // 
             // FormNavigationLogger
             // 
@@ -188,7 +253,8 @@ namespace AgOpenGPS
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(770, 560);
+            this.ClientSize = new System.Drawing.Size(800, 520);
+            this.Controls.Add(this.grpRecordingMode);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnSave);
@@ -197,9 +263,6 @@ namespace AgOpenGPS
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.lblCurrentXTE);
             this.Controls.Add(this.lblRecordCount);
-            this.Controls.Add(this.lblRecordingInterval);
-            this.Controls.Add(this.nudRecordingInterval);
-            this.Controls.Add(this.lblRecordsPerSecond);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -211,7 +274,10 @@ namespace AgOpenGPS
             this.Load += new System.EventHandler(this.FormNavigationLogger_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormNavigationLogger_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dgvHistory)).EndInit();
+            this.grpRecordingMode.ResumeLayout(false);
+            this.grpRecordingMode.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudRecordingInterval)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDistanceInterval)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
@@ -226,8 +292,13 @@ namespace AgOpenGPS
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.GroupBox grpRecordingMode;
+        private System.Windows.Forms.RadioButton rbByTime;
+        private System.Windows.Forms.RadioButton rbByDistance;
         private System.Windows.Forms.Label lblRecordingInterval;
         private System.Windows.Forms.NumericUpDown nudRecordingInterval;
         private System.Windows.Forms.Label lblRecordsPerSecond;
+        private System.Windows.Forms.Label lblDistanceInterval;
+        private System.Windows.Forms.NumericUpDown nudDistanceInterval;
     }
 }

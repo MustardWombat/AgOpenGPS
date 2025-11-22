@@ -23,11 +23,17 @@ namespace AgOpenGPS
             updateTimer.Tick += UpdateTimer_Tick;
             updateTimer.Start();
             
+            // Initialize mode radio buttons
+            rbByTime.Checked = logger.Mode == CNavigationLogger.RecordingMode.ByTime;
+            rbByDistance.Checked = logger.Mode == CNavigationLogger.RecordingMode.ByDistance;
+
             // Initialize interval controls with current values
             nudRecordingInterval.Value = (decimal)logger.RecordingIntervalSeconds;
+            nudDistanceInterval.Value = (decimal)logger.RecordingIntervalDistance;
             
             // Update the records per second label initially
-            lblRecordsPerSecond.Text = $"({(1.0 / (double)nudRecordingInterval.Value):F1} records/sec)";
+            UpdateIntervalLabels();
+            UpdateModeControls();
             
             // Initial update
             UpdateDisplay();
@@ -65,10 +71,49 @@ namespace AgOpenGPS
             }
         }
 
+        private void UpdateIntervalLabels()
+        {
+            lblRecordsPerSecond.Text = $"({(1.0 / (double)nudRecordingInterval.Value):F1} records/sec)";
+        }
+
+        private void UpdateModeControls()
+        {
+            bool isByTime = rbByTime.Checked;
+            lblRecordingInterval.Enabled = isByTime;
+            nudRecordingInterval.Enabled = isByTime;
+            lblRecordsPerSecond.Enabled = isByTime;
+
+            lblDistanceInterval.Enabled = !isByTime;
+            nudDistanceInterval.Enabled = !isByTime;
+        }
+
+        private void rbByTime_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbByTime.Checked)
+            {
+                logger.Mode = CNavigationLogger.RecordingMode.ByTime;
+                UpdateModeControls();
+            }
+        }
+
+        private void rbByDistance_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbByDistance.Checked)
+            {
+                logger.Mode = CNavigationLogger.RecordingMode.ByDistance;
+                UpdateModeControls();
+            }
+        }
+
         private void nudRecordingInterval_ValueChanged(object sender, EventArgs e)
         {
             logger.RecordingIntervalSeconds = (double)nudRecordingInterval.Value;
-            lblRecordsPerSecond.Text = $"({(1.0 / (double)nudRecordingInterval.Value):F1} records/sec)";
+            UpdateIntervalLabels();
+        }
+
+        private void nudDistanceInterval_ValueChanged(object sender, EventArgs e)
+        {
+            logger.RecordingIntervalDistance = (double)nudDistanceInterval.Value;
         }
 
         private void nudSaveInterval_ValueChanged(object sender, EventArgs e)
