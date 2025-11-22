@@ -1307,19 +1307,13 @@ namespace AgOpenGPS
             if (isJobStarted && guidanceLineDistanceOff != 32000)
             {
                 double xte = guidanceLineDistanceOff / 1000.0; // Convert from mm to meters
+                
+                // Get current position from AppModel which stores the actual WGS84 lat/lon
                 CNavigationLogger.Instance.LogNavigationData(
-                    xte,                    // XTE from existing variable
-                    0,                      // Lateral offset (can add if needed)
-                    fixHeading * 180.0 / Math.PI,  // Heading in degrees
-                    avgSpeed,               // Speed
-                    0,                      // Latitude placeholder
-                    0                       // Longitude placeholder
+                    xte,
+                    AppModel.CurrentLatLon.Latitude,
+                    AppModel.CurrentLatLon.Longitude
                 );
-            }
-            // Add debugging to see if this method is being called
-            else
-            {
-                Console.WriteLine($"LogXTE: JobStarted={isJobStarted}, GuidanceDistance={guidanceLineDistanceOff}");
             }
         }
     }//class FormGPS

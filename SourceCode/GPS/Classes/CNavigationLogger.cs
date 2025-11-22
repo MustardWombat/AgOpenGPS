@@ -11,9 +11,6 @@ namespace AgOpenGPS
         {
             public DateTime Timestamp;
             public double CrossTrackError;
-            public double LateralOffset;
-            public double Heading;
-            public double Speed;
             public double Latitude;
             public double Longitude;
         }
@@ -79,7 +76,7 @@ namespace AgOpenGPS
                     writer.WriteLine($"Log Started: {DateTime.Now}");
                     writer.WriteLine($"Log File Path: {logFilePath}");
                     writer.WriteLine();
-                    writer.WriteLine("Timestamp\t\tXTE\tLateral Offset\tHeading\tSpeed\tLatitude\tLongitude");
+                    writer.WriteLine("Timestamp\t\tXTE\tLatitude\tLongitude");
                     writer.WriteLine("------------------------------------------------------------------------");
                 }
             }
@@ -89,7 +86,7 @@ namespace AgOpenGPS
             }
         }
 
-        public void LogNavigationData(double xte, double lateralOffset, double heading, double speed, double lat, double lon)
+        public void LogNavigationData(double xte, double lat, double lon)
         {
             // Keep the 1-second timing but log whenever XTE is available
             if (!ShouldLog()) return;
@@ -100,9 +97,6 @@ namespace AgOpenGPS
             {
                 Timestamp = DateTime.Now,
                 CrossTrackError = xte,
-                LateralOffset = lateralOffset,
-                Heading = heading,
-                Speed = speed,
                 Latitude = lat,
                 Longitude = lon
             };
@@ -131,12 +125,16 @@ namespace AgOpenGPS
                     writer.WriteLine($"Log File Path: {logFilePath}");
                     writer.WriteLine($"Total Records: {navigationHistory.Count}");
                     writer.WriteLine();
-                    writer.WriteLine("Timestamp\t\tXTE\tLateral Offset\tHeading\tSpeed\tLatitude\tLongitude");
+                    writer.WriteLine("Timestamp\t\tXTE\tLatitude\tLongitude");
                     writer.WriteLine("------------------------------------------------------------------------");
 
                     foreach (var data in navigationHistory)
                     {
-                        writer.WriteLine($"{data.Timestamp:yyyy-MM-dd HH:mm:ss.fff}\t{data.CrossTrackError:F3}\t{data.LateralOffset:F3}\t{data.Heading:F1}\t{data.Speed:F2}\t{data.Latitude:F8}\t{data.Longitude:F8}");
+                        writer.WriteLine(
+                            $"{data.Timestamp:yyyy-MM-dd HH:mm:ss.fff}\t" +
+                            $"{data.CrossTrackError:F3}\t" +
+                            $"{data.Latitude:F8}\t" +
+                            $"{data.Longitude:F8}");
                     }
                 }
             }
