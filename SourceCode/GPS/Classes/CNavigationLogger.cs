@@ -16,9 +16,8 @@ namespace AgOpenGPS
         }
 
         private List<NavigationData> navigationHistory;
-        private string logFilePath;
+        private string logDirectory;
         private DateTime lastSaveTime;
-        private readonly TimeSpan autoSaveInterval = TimeSpan.FromSeconds(5);
 
         // Add static instance for global access
         private static CNavigationLogger _instance;
@@ -34,11 +33,16 @@ namespace AgOpenGPS
 
         // Add method to check if logging should occur (to avoid excessive logging)
         private DateTime lastLogTime = DateTime.MinValue;
-        private readonly TimeSpan logInterval = TimeSpan.FromSeconds(1); // Log every second
+        private TimeSpan logInterval = TimeSpan.FromSeconds(1); // Log every second
+        public double RecordingIntervalSeconds
+        {
+            get => logInterval.TotalSeconds;
+            set => logInterval = TimeSpan.FromSeconds(value);
+        }
         private bool isRecording = true; // Start recording by default
 
         public bool IsRecording => isRecording;
-        public string LogFilePath => logFilePath;
+        public string LogDirectory => logDirectory;
 
         public bool ShouldLog()
         {
@@ -49,17 +53,14 @@ namespace AgOpenGPS
         {
             navigationHistory = new List<NavigationData>();
             
-            // Save log file in the application directory instead of Documents
+            // Save log files in the application directory
             string appDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            logFilePath = Path.Combine(appDirectory, "NavigationLog.txt");
+            logDirectory = Path.Combine(appDirectory, "NavigationLogs");
             
             // Ensure directory exists
             try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(logFilePath));
-                
-                // Create initial file with header
-                CreateInitialLogFile();
+                Directory.CreateDirectory(logDirectory);
             }
             catch (Exception ex)
             {
@@ -69,30 +70,8 @@ namespace AgOpenGPS
             lastSaveTime = DateTime.Now;
         }
 
-        private void CreateInitialLogFile()
-        {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(logFilePath, false))
-                {
-                    writer.WriteLine("AgOpenGPS Navigation Log");
-                    writer.WriteLine("========================");
-                    writer.WriteLine($"Log Started: {DateTime.Now}");
-                    writer.WriteLine($"Log File Path: {logFilePath}");
-                    writer.WriteLine();
-                    writer.WriteLine("Timestamp\t\tXTE\tLatitude\tLongitude");
-                    writer.WriteLine("------------------------------------------------------------------------");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error creating initial navigation log file: {ex.Message}");
-            }
-        }
-
         public void LogNavigationData(double xte, double lat, double lon)
         {
-            // Keep the 1-second timing but log whenever XTE is available
             if (!ShouldLog()) return;
 
             lastLogTime = DateTime.Now;
@@ -106,13 +85,6 @@ namespace AgOpenGPS
             };
 
             navigationHistory.Add(data);
-            
-            // Auto-save every 5 seconds
-            if (DateTime.Now - lastSaveTime > autoSaveInterval)
-            {
-                SaveToFile();
-                lastSaveTime = DateTime.Now;
-            }
         }
 
         public List<NavigationData> GetNavigationHistory() => navigationHistory;
@@ -134,17 +106,22 @@ namespace AgOpenGPS
 
         public void SaveToFile()
         {
+            // Create timestamped filename
+            string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+            string filename = $"NavigationLog_{timestamp}.txt";
+            string filepath = Path.Combine(logDirectory, filename);
+
             try
             {
-                using (StreamWriter writer = new StreamWriter(logFilePath, false))
+                using (StreamWriter writer = new StreamWriter(filepath, false))
                 {
                     writer.WriteLine("AgOpenGPS Navigation Log");
                     writer.WriteLine("========================");
                     writer.WriteLine($"Generated: {DateTime.Now}");
-                    writer.WriteLine($"Log File Path: {logFilePath}");
+                    writer.WriteLine($"Recording Interval: {logInterval.TotalSeconds:F1} seconds");
                     writer.WriteLine($"Total Records: {navigationHistory.Count}");
                     writer.WriteLine();
-                    writer.WriteLine("Timestamp\t\tXTE\tLatitude\tLongitude");
+                    writer.WriteLine("Timestamp\t\t\tXTE (m)\tLatitude\tLongitude");
                     writer.WriteLine("------------------------------------------------------------------------");
 
                     foreach (var data in navigationHistory)
@@ -156,10 +133,13 @@ namespace AgOpenGPS
                             $"{data.Longitude:F8}");
                     }
                 }
+                
+                Console.WriteLine($"Navigation log saved: {filepath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error saving navigation log: {ex.Message}");
+                throw;
             }
         }
     }

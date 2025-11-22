@@ -36,7 +36,11 @@ namespace AgOpenGPS
             this.btnSave = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
+            this.lblRecordingInterval = new System.Windows.Forms.Label();
+            this.nudRecordingInterval = new System.Windows.Forms.NumericUpDown();
+            this.lblRecordsPerSecond = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHistory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudRecordingInterval)).BeginInit();
             this.SuspendLayout();
             // 
             // lblRecordCount
@@ -150,13 +154,41 @@ namespace AgOpenGPS
             this.btnClose.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnClose.UseVisualStyleBackColor = false;
             // 
+            // lblRecordingInterval
+            // 
+            this.lblRecordingInterval.AutoSize = true;
+            this.lblRecordingInterval.Location = new System.Drawing.Point(400, 20);
+            this.lblRecordingInterval.Name = "lblRecordingInterval";
+            this.lblRecordingInterval.Size = new System.Drawing.Size(150, 13);
+            this.lblRecordingInterval.Text = "Recording Interval (seconds):";
+            // 
+            // nudRecordingInterval
+            // 
+            this.nudRecordingInterval.DecimalPlaces = 1;
+            this.nudRecordingInterval.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
+            this.nudRecordingInterval.Location = new System.Drawing.Point(560, 18);
+            this.nudRecordingInterval.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
+            this.nudRecordingInterval.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
+            this.nudRecordingInterval.Name = "nudRecordingInterval";
+            this.nudRecordingInterval.Size = new System.Drawing.Size(60, 20);
+            this.nudRecordingInterval.Value = new decimal(new int[] { 10, 0, 0, 65536 });
+            this.nudRecordingInterval.ValueChanged += new System.EventHandler(this.nudRecordingInterval_ValueChanged);
+            // 
+            // lblRecordsPerSecond
+            // 
+            this.lblRecordsPerSecond.AutoSize = true;
+            this.lblRecordsPerSecond.Location = new System.Drawing.Point(626, 20);
+            this.lblRecordsPerSecond.Name = "lblRecordsPerSecond";
+            this.lblRecordsPerSecond.Size = new System.Drawing.Size(100, 13);
+            this.lblRecordsPerSecond.Text = "(1.0 records/sec)";
+            // 
             // FormNavigationLogger
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(770, 520);
+            this.ClientSize = new System.Drawing.Size(770, 560);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnSave);
@@ -165,6 +197,9 @@ namespace AgOpenGPS
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.lblCurrentXTE);
             this.Controls.Add(this.lblRecordCount);
+            this.Controls.Add(this.lblRecordingInterval);
+            this.Controls.Add(this.nudRecordingInterval);
+            this.Controls.Add(this.lblRecordsPerSecond);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -176,6 +211,7 @@ namespace AgOpenGPS
             this.Load += new System.EventHandler(this.FormNavigationLogger_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormNavigationLogger_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dgvHistory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudRecordingInterval)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
@@ -190,5 +226,8 @@ namespace AgOpenGPS
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Label lblRecordingInterval;
+        private System.Windows.Forms.NumericUpDown nudRecordingInterval;
+        private System.Windows.Forms.Label lblRecordsPerSecond;
     }
 }

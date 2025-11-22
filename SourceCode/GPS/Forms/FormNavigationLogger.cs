@@ -23,6 +23,12 @@ namespace AgOpenGPS
             updateTimer.Tick += UpdateTimer_Tick;
             updateTimer.Start();
             
+            // Initialize interval controls with current values
+            nudRecordingInterval.Value = (decimal)logger.RecordingIntervalSeconds;
+            
+            // Update the records per second label initially
+            lblRecordsPerSecond.Text = $"({(1.0 / (double)nudRecordingInterval.Value):F1} records/sec)";
+            
             // Initial update
             UpdateDisplay();
         }
@@ -59,6 +65,17 @@ namespace AgOpenGPS
             }
         }
 
+        private void nudRecordingInterval_ValueChanged(object sender, EventArgs e)
+        {
+            logger.RecordingIntervalSeconds = (double)nudRecordingInterval.Value;
+            lblRecordsPerSecond.Text = $"({(1.0 / (double)nudRecordingInterval.Value):F1} records/sec)";
+        }
+
+        private void nudSaveInterval_ValueChanged(object sender, EventArgs e)
+        {
+            // No longer used - keeping for compatibility with designer
+        }
+
         private void btnToggleRecording_Click(object sender, EventArgs e)
         {
             if (logger.IsRecording)
@@ -79,9 +96,17 @@ namespace AgOpenGPS
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            logger.SaveToFile();
-            MessageBox.Show($"Navigation log saved successfully!\n\nLocation:\n{logger.LogFilePath}", 
-                "Save Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                logger.SaveToFile();
+                MessageBox.Show($"Navigation log saved successfully!\n\nLocation:\n{logger.LogDirectory}", 
+                    "Save Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving log: {ex.Message}", 
+                    "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnClear_Click(object sender, EventArgs e)
